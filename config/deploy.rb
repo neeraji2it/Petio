@@ -1,142 +1,52 @@
-# config valid only for Capistrano 3.1
-lock '3.2.1'
-
-set :application, 'peatio'
-set :repo_url, fetch(:repo_url)
-set :deploy_to, fetch(:deploy_to)
-set :branch, fetch(:branch)
-set :domain, fetch(:domain)
-
-
-# Default branch is :master
-# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
-
-# Default deploy_to directory is /var/www/my_app
-# set :deploy_to, '/var/www/my_app'
-
-# Default value for :scm is :git
+set :stages, %w(integration)
+set :default_stage, "integration"
+require 'capistrano/ext/multistage'
+require 'bundler/capistrano'
+role (:web) {"#{domain}"}
+role (:app) {"#{domain}"}
+role (:db) { ["#{domain}", {:primary => true}] }
+# Set the deploy branch to the current branch
+set :application, "petio"
 set :scm, :git
-
-# Default value for :format is :pretty
-set :format, :pretty
-
-# Default value for :log_level is :debug
-set :log_level, :debug
-
-# Default value for :pty is false
-set :pty, true
-
-# Default value for :linked_files is []
-set :linked_files, %w{config/database.yml config/application.yml config/banks.yml config/currencies.yml config/markets.yml config/member_tags.yml config/slack.yml config/withdraw_channels.yml}
-
-# Default value for linked_dirs is []
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
-
-# Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
-
-# Default value for keep_releases is 5
-set :keep_releases, 5
-
-task :environment do
-  invoke :'rbenv:load'
+set (:repository) { "#{gitrepo}" }
+set (:deploy_to) { "#{deploydir}" }
+#set :scm_user, "ubuntu"
+ssh_options[:forward_agent] = true
+default_run_options[:pty] = true
+desc "Symlinks database.yml, mailer.yml file from shared directory into the latest release"
+task :symlink_shared, :roles => [:app, :db] do
+run "ln -s #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
+# run "ln -s #{shared_path}/config/secrets.yml #{latest_release}/config/secrets.yml"
+# run "ln -s #{shared_path}/payments #{latest_release}/public/payments"
+# run "ln -s #{shared_path}/payments/tokens.rb #{latest_release}/config/initializers/tokens.rb"
+# run "ln -s #{shared_path}/system #{latest_release}/system"
+# run "ln -s #{shared_path}/public/system/attaches #{latest_release}/public/system/attaches"
 end
-
-task :setup => :environment do
-  queue! %[mkdir -p "#{deploy_to}/shared/log"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
-
-  queue! %[mkdir -p "#{deploy_to}/shared/config"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
-
-  queue! %[mkdir -p "#{deploy_to}/shared/tmp"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp"]
-
-  queue! %[mkdir -p "#{deploy_to}/shared/public/uploads"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/public/uploads"]
-
-  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/currencies.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/application.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/markets.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/amqp.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/banks.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/deposit_channels.yml"]
-  queue! %[touch "#{deploy_to}/shared/config/withdraw_channels.yml"]
-end
-
-namespace :passenger do
-  desc "Restart Passenger"
-  task :restart do
-    queue %{
-      echo "-----> Restarting passenger"
-      cd #{deploy_to}/current
-      #{echo_cmd %[mkdir -p tmp]}
-      #{echo_cmd %[touch tmp/restart.txt]}
-    }
-  end
-end
-
-namespace :rails do
-  task :touch_client_i18n_assets do
-    queue %[
-      echo "-----> Touching clint i18n assets"
-      #{echo_cmd %[RAILS_ENV=production bundle exec rake deploy:touch_client_i18n_assets]}
-    ]
-  end
-end
-
-namespace :daemons do
-  desc "Start Daemons"
-  task start: :environment do
-    queue %{
-      cd #{deploy_to}/current
-      RAILS_ENV=production bundle exec ./bin/rake daemons:start
-      echo Daemons START DONE!!!
-    }
-  end
-
-  desc "Stop Daemons"
-  task stop: :environment do
-    queue %{
-      cd #{deploy_to}/current
-      RAILS_ENV=production bundle exec ./bin/rake daemons:stop
-      echo Daemons STOP DONE!!!
-    }
-  end
-
-  desc "Query Daemons"
-  task status: :environment do
-    queue %{
-      cd #{deploy_to}/current
-      RAILS_ENV=production bundle exec ./bin/rake daemons:status
-    }
-  end
-end
-
-desc "Generate liability proof"
-task 'solvency:liability_proof' do
-  queue "cd #{deploy_to}/current && RAILS_ENV=production bundle exec rake solvency:liability_proof"
-end
-#namespace :deploy do
-
- # desc 'Restart application'
-  #task :restart do
-   # on roles(:app), in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
-      # execute :touch, release_path.join('tmp/restart.txt')
-    #end
-  #end
-
-  #after :publishing, :restart
-
-  #after :restart, :clear_cache do
-    # roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
-    #end
-  #end
-
+# after "deploy:stop", "delayed_job:stop"
+# after "deploy:start", "delayed_job:start"
+# after "deploy:restart", "delayed_job:restart"
+#
+#task :restart_delayed_job, :roles => [:app, :db] do
+# run "RAILS_ENV=serverdev script/delayed_job stop"
+# run "RAILS_ENV=serverdev script/delayed_job start"
 #end
+#
+#after 'deploy:finalize_update', :restart_delayed_job
+after 'deploy:finalize_update', :symlink_shared, "deploy:migrate", "deploy:cleanup"
+#after 'deploy:finalize_update', 'deploy:extractions'
+#namespace :deploy do
+# desc "Reload the database with seed data"
+# task :seed do
+# run "cd #{current_path}; bundle exec rake db:seed RAILS_ENV=#{rails_env}"
+# end
+#end
+namespace :deploy do
+desc "Restart Application"
+task :restart, :roles => :app do
+run "touch #{current_path}/tmp/restart.txt"
+end
+[:start, :stop].each do |t|
+desc "#{t} task is a no-op with mod_rails"
+task t, :roles => :app do ; end
+end
+end
