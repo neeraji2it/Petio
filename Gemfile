@@ -97,8 +97,8 @@ group :test do
   gem 'poltergeist'
 end
 
-# group :development do
-#   gem "capistrano-rails"
-# end
-gem 'rvm-capistrano'
-gem 'capistrano-ext'
+group :development do
+  gem "capistrano-rails"
+end
+# gem 'rvm-capistrano'
+# gem 'capistrano-ext'
