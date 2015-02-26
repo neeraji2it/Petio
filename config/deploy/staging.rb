@@ -19,7 +19,7 @@ server 'petio.rensofttechnosys.com', user: 'petio', roles: %w{web app}, my_prope
 
 
 set :repo_url, 'git@github.com:neeraji2it/Petio.git'
-set :deploy_to, '/home/petio'
+set :deploy_to, '/home/petio/petio.rensoftechnosys.com'
 set :branch, 'master'
 set :domain, 'petio.rensofttechnosys.com'
 
