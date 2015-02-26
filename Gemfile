@@ -97,3 +97,6 @@ group :test do
   gem 'poltergeist'
 end
 
+group :development do
+  gem "capistrano-rails"
+end
