@@ -4,9 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{deploy@example.com}
-role :web, %w{deploy@example.com}
-role :db,  %w{deploy@example.com}
+role :app, %w{demo.peatio.com}
+role :web, %w{demo.peatio.com}
+role :db,  %w{petio}
 
 
 # Extended Server Syntax
@@ -18,6 +18,11 @@ role :db,  %w{deploy@example.com}
 server 'petio.rensofttechnosys.com', user: 'petio', roles: %w{web app}, my_property: :my_value
 
 
+
+set :repo_url, 'git@github.com:neeraji2it/Petio.git'
+set :deploy_to, '/home/petio'
+set :branch, 'master'
+set :domain, 'petio.rensofttechnosys.com'
 
 # Custom SSH Options
 # ==================

@@ -1,25 +1,122 @@
-set :application, "set your application name here"
-set :repository,  "set your repository location here"
+require 'mina/bundler'
+require 'mina/rails'
+require 'mina/git'
+require 'mina/rbenv'
+require 'mina/slack/tasks'
 
-# set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :repository, 'https://github.com/peatio/peatio.git'
+set :user, 'deploy'
+set :deploy_to, '/home/deploy/peatio'
+set :branch, 'master'
+set :domain, 'demo.peatio.com'
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
+set :shared_paths, [
+  'config/database.yml',
+  'config/application.yml',
+  'config/currencies.yml',
+  'config/markets.yml',
+  'config/amqp.yml',
+  'config/banks.yml',
+  'config/deposit_channels.yml',
+  'config/withdraw_channels.yml',
+  'public/uploads',
+  'tmp',
+  'log'
+]
 
-# if you want to clean up old releases on each deploy uncomment this:
-# after "deploy:restart", "deploy:cleanup"
+task :environment do
+  invoke :'rbenv:load'
+end
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+task :setup => :environment do
+  queue! %[mkdir -p "#{deploy_to}/shared/log"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
 
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+  queue! %[mkdir -p "#{deploy_to}/shared/config"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/tmp"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/public/uploads"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/public/uploads"]
+
+  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/currencies.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/application.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/markets.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/amqp.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/banks.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/deposit_channels.yml"]
+  queue! %[touch "#{deploy_to}/shared/config/withdraw_channels.yml"]
+end
+
+desc "Deploys the current version to the server."
+task deploy: :environment do
+  deploy do
+    invoke :'git:clone'
+    invoke :'deploy:link_shared_paths'
+    invoke :'bundle:install'
+    invoke :'rails:db_migrate'
+    invoke :'rails:touch_client_i18n_assets'
+    invoke :'rails:assets_precompile'
+
+    to :launch do
+      invoke :'passenger:restart'
+    end
+  end
+end
+
+namespace :passenger do
+  desc "Restart Passenger"
+  task :restart do
+    queue %{
+      echo "-----> Restarting passenger"
+      cd #{deploy_to}/current
+      #{echo_cmd %[mkdir -p tmp]}
+      #{echo_cmd %[touch tmp/restart.txt]}
+    }
+  end
+end
+
+namespace :rails do
+  task :touch_client_i18n_assets do
+    queue %[
+      echo "-----> Touching clint i18n assets"
+      #{echo_cmd %[RAILS_ENV=production bundle exec rake deploy:touch_client_i18n_assets]}
+    ]
+  end
+end
+
+namespace :daemons do
+  desc "Start Daemons"
+  task start: :environment do
+    queue %{
+      cd #{deploy_to}/current
+      RAILS_ENV=production bundle exec ./bin/rake daemons:start
+      echo Daemons START DONE!!!
+    }
+  end
+
+  desc "Stop Daemons"
+  task stop: :environment do
+    queue %{
+      cd #{deploy_to}/current
+      RAILS_ENV=production bundle exec ./bin/rake daemons:stop
+      echo Daemons STOP DONE!!!
+    }
+  end
+
+  desc "Query Daemons"
+  task status: :environment do
+    queue %{
+      cd #{deploy_to}/current
+      RAILS_ENV=production bundle exec ./bin/rake daemons:status
+    }
+  end
+end
+
+desc "Generate liability proof"
+task 'solvency:liability_proof' do
+  queue "cd #{deploy_to}/current && RAILS_ENV=production bundle exec rake solvency:liability_proof"
+end
