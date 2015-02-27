@@ -2,11 +2,11 @@
 lock '3.2.1'
 
 set :application, 'peatio'
-set :repo_url, fetch(:repo_url)
-set :deploy_to, fetch(:deploy_to)
-set :branch, fetch(:branch)
-set :domain, fetch(:domain)
-set :use_sudo, false
+set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
+set :deploy_to, '/var/www/petio.rensofttechnosys.com'
+set :branch, 'master'
+set :domain, 'petio.rensofttechnosys.com'
+# set :use_sudo, false
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
