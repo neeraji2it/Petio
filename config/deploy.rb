@@ -6,7 +6,7 @@ set :repo_url, fetch(:repo_url)
 set :deploy_to, fetch(:deploy_to)
 set :branch, fetch(:branch)
 set :domain, fetch(:domain)
-
+set :use_sudo, false
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
