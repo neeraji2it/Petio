@@ -18,8 +18,8 @@ role :db,  %w{petio.rensofttechnosys.com}
 server 'petio.rensofttechnosys.com', user: 'petio@5.9.111.55 -p 2222', roles: %w{web app}, my_property: :my_value
 
 
-set :repo_url, 'git@github.com:neeraji2it/Petio.git'
-set :deploy_to, '/var/www/petio.rensoftechnosys.com'
+set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
+set :deploy_to, '/var/www/petio.rensofttechnosys.com'
 set :branch, 'master'
 set :domain, 'petio.rensofttechnosys.com'
 
