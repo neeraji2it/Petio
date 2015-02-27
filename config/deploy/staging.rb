@@ -6,7 +6,7 @@
 
 role :app, %w{petio.rensofttechnosys.com}
 role :web, %w{petio.rensofttechnosys.com}
-role :db,  %w{petio}
+role :db,  %w{petio.rensofttechnosys.com}
 
 
 # Extended Server Syntax
@@ -15,11 +15,11 @@ role :db,  %w{petio}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'petio.rensofttechnosys.com', user: 'petio', roles: %w{web app}, my_property: :my_value
+server 'petio.rensofttechnosys.com', user: 'petio@5.9.111.55 -p 2222', roles: %w{web app}, my_property: :my_value
 
 
 set :repo_url, 'git@github.com:neeraji2it/Petio.git'
-set :deploy_to, '/home/petio/petio.rensoftechnosys.com'
+set :deploy_to, '/var/www/petio.rensoftechnosys.com'
 set :branch, 'master'
 set :domain, 'petio.rensofttechnosys.com'
 

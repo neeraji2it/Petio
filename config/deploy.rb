@@ -21,7 +21,10 @@ set :scm, :git
 set :format, :pretty
 
 # Default value for :log_level is :debug
-set :log_level, :debug
+set :log_level, :debug 
+#peatio/as petio@petio.rensofttechnosys.com
+#DEBUG [b696f8c5] Command: /usr/bin/env mkdir -p /tmp/peatio/
+
 
 # Default value for :pty is false
 set :pty, true
