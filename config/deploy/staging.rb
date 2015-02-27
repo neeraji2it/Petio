@@ -15,7 +15,7 @@ role :db,  %w{petio.rensofttechnosys.com}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server '5.9.111.55', user: 'petio@5.9.111.55 -p 2222', roles: %w{web app}, my_property: :my_value
+server '5.9.111.55', user: 'petio', roles: %w{web app}, my_property: :my_value 
 
 
 set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
