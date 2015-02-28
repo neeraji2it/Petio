@@ -7,7 +7,7 @@ set :deploy_to, '/var/www/petio.renosofttechnosys.com'
 set :branch, 'master'
 set :domain, 'petio.renosofttechnosys.com'
 
-set :port, 2222
+#set :port, 2222
 
 set :use_sudo, false
 
