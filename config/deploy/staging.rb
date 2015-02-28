@@ -15,7 +15,7 @@ role :db,  %w{shivraj@23.227.172.67}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server '23.227.177.94', user: 'shivraj', roles: %w{web app}
+server '23.227.172.67', user: 'shivraj', roles: %w{web app}
 
 set :domain, '23.227.177.94'
 
