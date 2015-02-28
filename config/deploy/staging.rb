@@ -21,7 +21,7 @@ server '23.227.177.94', user: 'shivraj', roles: %w{web app}
 set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
 set :deploy_to, '/var/www/peatio.com'
 set :branch, 'master'
-set :domain, '23.227.177.94'
+set :domain, 'peatio.com'
 
 # Custom SSH Options
 # ==================
