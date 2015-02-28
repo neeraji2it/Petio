@@ -17,11 +17,12 @@ role :db,  %w{shivraj@23.227.172.67}
 
 server '23.227.177.94', user: 'shivraj', roles: %w{web app}
 
-
-set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
-set :deploy_to, '/var/www/peatio.com'
-set :branch, 'master'
 set :domain, '23.227.177.94'
+
+set :deploy_to, '/var/www/peatio.com/public_html'
+set :branch, 'master'
+set :deploy_user, 'shivraj'
+set :log_level, :debug
 
 # Custom SSH Options
 # ==================

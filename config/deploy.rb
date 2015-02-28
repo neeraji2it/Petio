@@ -2,10 +2,7 @@
 lock '3.2.1'
 
 set :application, 'peatio'
-set :repo_url, fetch(:repo_url)
-set :deploy_to, fetch(:deploy_to)
-set :branch, fetch(:branch)
-set :domain, fetch(:domain)
+set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
 
 
 # Default branch is :master
@@ -24,7 +21,7 @@ set :format, :pretty
 set :log_level, :debug
 
 # Default value for :pty is false
-set :pty, true
+set :pty, false
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml config/application.yml config/banks.yml config/currencies.yml config/markets.yml config/member_tags.yml config/slack.yml config/withdraw_channels.yml}
@@ -38,26 +35,25 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
+# namespace :deploy do
 
-namespace :deploy do
+#  desc 'Restart application'
+#   task :restart do
+#    on roles(:app), in: :sequence, wait: 5 do
+#       #Your restart mechanism here, for example:
+#       execute :touch, release_path.join('tmp/restart.txt')
+#     end
+#   end
 
- desc 'Restart application'
-  task :restart do
-   on roles(:app), in: :sequence, wait: 5 do
-      #Your restart mechanism here, for example:
-      execute :touch, release_path.join('tmp/restart.txt')
-    end
-  end
+#   after :publishing, :restart
 
-  after :publishing, :restart
+#   #after :restart, :clear_cache do
+#    # roles(:web), in: :groups, limit: 3, wait: 10 do
+#     #  #Here we can do anything such as:
+#      # within release_path do
+#       #  execute :rake, 'cache:clear'
+#       #end
+#     #end
+#   #end
 
-  #after :restart, :clear_cache do
-   # roles(:web), in: :groups, limit: 3, wait: 10 do
-    #  #Here we can do anything such as:
-     # within release_path do
-      #  execute :rake, 'cache:clear'
-      #end
-    #end
-  #end
-
-end
+# end
