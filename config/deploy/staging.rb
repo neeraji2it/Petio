@@ -20,7 +20,7 @@ server '23.227.177.94', user: 'shivraj', roles: %w{web app}
 set :domain, '23.227.177.94'
 
 set :deploy_to, '/var/www/peatio.com/public_html'
-set :branch, 'master'
+set :branch, 'staging'
 set :deploy_user, 'shivraj'
 set :log_level, :debug
 
