@@ -4,9 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{root@5.9.111.55}
-role :web, %w{root@5.9.111.55}
-role :db,  %w{root@5.9.111.55}
+role :app, %w{shivraj@23.227.172.67}
+role :web, %w{shivraj@23.227.172.67}
+role :db,  %w{shivraj@23.227.172.67}
 
 
 # Extended Server Syntax
@@ -15,7 +15,7 @@ role :db,  %w{root@5.9.111.55}
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server '5.9.111.55', user: 'root', port: '2222', roles: %w{web app}, my_property: :my_value 
+server '23.227.177.94', user: 'shivraj', roles: %w{web app}
 
 
 # set :repo_url, 'git@github.com:neeraji2it/Petio.git' 
@@ -30,11 +30,12 @@ server '5.9.111.55', user: 'root', port: '2222', roles: %w{web app}, my_property
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+# set :ssh_options, {
+#   keys: %w(/home/root/.ssh/id_rsa),
+#   forward_agent: true,
+#   auth_methods: %w(HgfhYJYHgyjuykK9),
+#   port: 2222
+# }
 #
 # And/or per server (overrides global)
 # ------------------------------------
