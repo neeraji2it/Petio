@@ -30,7 +30,7 @@ class Proof < ActiveRecord::Base
   end
 
   def asset_sum
-    addresses.reduce 0 do |memo, address|
+    addresses do |memo, address|
       memo + address["balance"]
     end
   end

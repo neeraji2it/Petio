@@ -1,25 +1,19 @@
 source 'https://rubygems.org'
-
 gem 'rails', '~> 4.0.12'
 gem 'rails-i18n'
-
 gem 'mysql2'
 gem 'daemons-rails'
 gem 'redis-rails'
-
 gem 'rotp'
 gem 'json'
 gem 'jbuilder'
 gem 'bcrypt-ruby', '~> 3.1.2'
-
 gem 'doorkeeper', '~> 1.4.1'
 gem 'omniauth', '~> 1.2.1'
 gem 'omniauth-identity', '~> 1.1.1'
 gem 'omniauth-weibo-oauth2', '~> 0.4.0'
-
 gem 'figaro'
 gem 'hashie'
-
 gem 'aasm', '~> 3.4.0'
 gem 'amqp', '~> 1.3.0'
 gem 'bunny', '~> 1.2.1'
@@ -35,12 +29,10 @@ gem "globalize", "~> 4.0.0"
 gem 'paper_trail', '~> 3.0.1'
 gem 'rails-observers'
 gem 'country_select', '~> 2.1.0'
-
 gem 'gon', '~> 5.2.0'
 gem 'pusher'
 gem 'eventmachine', '~> 1.0.4'
 gem 'em-websocket', '~> 0.5.1'
-
 gem 'simple_form', '~> 3.1.0'
 gem 'slim-rails'
 gem 'sass-rails'
@@ -69,31 +61,34 @@ gem 'unread', github: 'poshboytl/unread'
 gem 'carrierwave', '~> 0.10.0'
 gem 'simple_captcha2', require: 'simple_captcha'
 gem 'rest-client', '~> 1.6.8'
-
 group :development, :test do
-  gem 'factory_girl_rails'
-  gem 'faker', '~> 1.4.3'
-  gem 'mina'
-  gem 'mina-slack', github: 'tomlion/mina-slack'
-  gem 'meta_request'
-  gem 'better_errors'
-  gem 'binding_of_caller'
-  gem 'pry-rails'
-  gem 'quiet_assets'
-  gem 'mails_viewer'
-  gem 'timecop'
-  gem 'dotenv-rails'
-  gem 'rspec-rails'
-  gem 'byebug'
+gem 'factory_girl_rails'
+gem 'faker', '~> 1.4.3'
+gem 'mina'
+gem 'mina-slack', github: 'tomlion/mina-slack'
+gem 'meta_request'
+gem 'better_errors'
+gem 'binding_of_caller'
+gem 'pry-rails'
+gem 'quiet_assets'
+gem 'mails_viewer'
+gem 'timecop'
+gem 'dotenv-rails'
+gem 'rspec-rails'
+gem 'byebug'
 end
-
 group :test do
-  gem 'database_cleaner'
-  gem 'mocha', :require => false
-  gem 'shoulda-matchers'
-  gem 'capybara'
-  gem 'launchy'
-  gem 'selenium-webdriver'
-  gem 'poltergeist'
+gem 'database_cleaner'
+gem 'mocha', :require => false
+gem 'shoulda-matchers'
+gem 'capybara'
+gem 'launchy'
+gem 'selenium-webdriver'
+gem 'poltergeist'
 end
-
+group :development do
+gem "capistrano-rails"
+end
+# gem 'rvm-capistrano'
+gem 'capistrano-ext'
+gem 'capistrano-bundler', '~> 1.1.2'
