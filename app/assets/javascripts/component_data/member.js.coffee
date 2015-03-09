@@ -1,7 +1,7 @@
 @MemberData = flight.component ->
   @after 'initialize', ->
     return if not gon.current_user
-    channel = @attr.pusher.subscribe("private-#{gon.current_user.sn}")
+    channel = @attr.pusher.subscribe("private-#{gon.current_user1.sn}")
 
     channel.bind 'account', (data) =>
       gon.accounts[data.currency] = data

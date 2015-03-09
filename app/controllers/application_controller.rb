@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :is_admin?, :current_market, :gon
+  helper_method :current_user, :is_admin?, :current_market
   before_action :set_timezone, :set_gon
   after_action :allow_iframe
   after_action :set_csrf_cookie_for_ng
